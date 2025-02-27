@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digging Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #8B4513;
+            overflow: hidden;
+            user-select: none;
+        }
+        #game-container {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: url('https://www.transparenttextures.com/patterns/soil.png');
+            cursor: pointer;
+        }
+        #hud {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: white;
+            font-size: 18px;
+        }
+        #upgrade-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #D2691E;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container"></div>
+
+    <div id="hud">
+        <p>Points: <span id="points">0</span></p>
+        <p>Dig Size: <span id="dig-size">50</span> px</p>
+        <button id="upgrade-btn">Upgrade Dig Size (Cost: 50)</button>
+    </div>
+
+    <script>
+        const gameContainer = document.getElementById("game-container");
+        const pointsDisplay = document.getElementById("points");
+        const digSizeDisplay = document.getElementById("dig-size");
+        const upgradeButton = document.getElementById("upgrade-btn");
+
+        let points = 0;
+        let digSize = 50;
+        let upgradeCost = 50;
+
+        function dig(event) {
+            points += 1;
+            pointsDisplay.innerText = points;
+
+            const hole = document.createElement("div");
+            hole.style.position = "absolute";
+            hole.style.width = `${digSize}px`;
+            hole.style.height = `${digSize}px`;
+            hole.style.background = "rgba(0, 0, 0, 0.8)";
+            hole.style.borderRadius = "50%";
+            hole.style.left = `${event.clientX - digSize / 2}px`;
+            hole.style.top = `${event.clientY - digSize / 2}px`;
+            hole.style.pointerEvents = "none";
+
+            gameContainer.appendChild(hole);
+        }
+
+        function upgradeDigSize() {
+            if (points >= upgradeCost) {
+                points -= upgradeCost;
+                digSize += 10;
+                upgradeCost *= 2;
+
+                pointsDisplay.innerText = points;
+                digSizeDisplay.innerText = digSize;
+                upgradeButton.innerText = `Upgrade Dig Size (Cost: ${upgradeCost})`;
+            }
+        }
+
+        gameContainer.addEventListener("click", dig);
+        upgradeButton.addEventListener("click", upgradeDigSize);
+    </script>
+
+</body>
+</html>
